@@ -1,15 +1,10 @@
 import React from 'react';
 import { StyleSheet, View, Text, Linking  } from 'react-native';
 
-const Footer = () => {
+const Header = () => {
     return (
-        <View style={styles.footerContainer}>
-            <View style={[styles.item, styles.itemLeft]}>
-                <Text style={styles.itemText}  onPress={() => Linking.openURL('http://google.com')}>Złóż zamówienie</Text>
-            </View>
-            <View style={[styles.item, styles.itemRight]}>
-                <Text style={styles.itemText} onPress={() => Linking.openURL('http://google.com')}>Użytkownik</Text>
-            </View>
+        <View style={styles.headerContainer}>
+            
         </View>
     )
 }
@@ -45,4 +40,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default Footer;
+export default Header;
