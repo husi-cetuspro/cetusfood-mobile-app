@@ -1,43 +1,24 @@
 import React from 'react';
-import { StyleSheet, View, Text, Linking  } from 'react-native';
+import { StyleSheet, View, Text, Image  } from 'react-native';
 
 const Header = () => {
     return (
         <View style={styles.headerContainer}>
-            
+            <Image style={styles.logo} source={require('../../assets/logo.png')} />
         </View>
     )
 }
 
 const styles = StyleSheet.create({
-    footerContainer: {
-        flex: 1,
-        backgroundColor: '#fff',
-        flexDirection: 'row',
-        position:  'fixed',
-        width: '100%',
-        bottom: 0,
-        paddingTop: 20,
-        paddingBottom: 20,
-        backgroundColor: '#086ad8',
+    headerContainer:{
+        paddingHorizontal: 25,
+        paddingVertical: 15,
+        backgroundColor: '#dbdbdb',
     },
-    itemLeft:{
-        borderRightWidth: 1,
-        borderRightColor: '#000',
-        width: '50%',
-    },
-    itemRight:{
-        borderLeftWidth: 1,
-        borderLeftColor: '#000',
-        width: '50%',
-    },
-    itemText: {
-        color:'#fff',
-        fontSize: 15,
-    },
-    item: {
-        textAlign: 'center',
-    },
+    logo:{
+        minHeight: 75,
+        width: 160,
+    }
 });
 
 export default Header;

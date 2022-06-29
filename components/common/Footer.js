@@ -1,14 +1,14 @@
 import React from 'react';
-import { StyleSheet, View, Text, Linking  } from 'react-native';
+import { StyleSheet, View, Text, Image } from 'react-native';
 
 const Footer = () => {
     return (
         <View style={styles.footerContainer}>
             <View style={[styles.item, styles.itemLeft]}>
-                <Text style={styles.itemText}  onPress={() => Linking.openURL('http://google.com')}>Złóż zamówienie</Text>
+                <Image style={styles.icon} source={require('../../assets/icon/cart.svg')} />
             </View>
             <View style={[styles.item, styles.itemRight]}>
-                <Text style={styles.itemText} onPress={() => Linking.openURL('http://google.com')}>Użytkownik</Text>
+                <Image style={styles.icon} source={require('../../assets/icon/user.svg')} />
             </View>
         </View>
     )
@@ -41,8 +41,12 @@ const styles = StyleSheet.create({
         fontSize: 15,
     },
     item: {
-        textAlign: 'center',
+        alignItems: 'center',
     },
+    icon:{
+        minHeight: 30,
+        width: 30,
+    }
 });
 
 export default Footer;
