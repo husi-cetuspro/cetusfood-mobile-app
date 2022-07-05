@@ -3,21 +3,64 @@ import { StyleSheet, View, Text, TextInput, TouchableOpacity } from 'react-nativ
 import { useForm, Controller } from "react-hook-form";
 import { useNavigation } from '@react-navigation/native';
 
-const Login = () => {
+const Register = () => {
     const navigation = useNavigation();
     const { control, handleSubmit, formState: { errors } } = useForm({
         defaultValues: {
-            username: '',
-            password: ''
+            name: '',
+            surname: '',
+            email: '',
+            phone: ''
         }
     });
     const onSubmit = data => {
         console.log(data)
-        navigation.navigate('Home');
+        navigation.navigate('Login');
     };
-
     return (
-        <View style={styles.loginContainer}>
+        <View style={styles.registerContainer}>
+            <View style={styles.inputContainer}>
+                <Text style={styles.label}>Imię</Text>
+                <Controller
+                    control={control}
+                    rules={{
+                        required: true,
+                    }}
+                    render={({ field: { onChange, onBlur, value } }) => (
+                        <TextInput
+                            style={styles.textInput}
+                            onBlur={onBlur}
+                            onChangeText={onChange}
+                            value={value}
+                            placeholder={'Wpisz swoje imię'}
+                            placeholderTextColor={'#000000'}
+                        />
+                    )}
+                    name="name"
+                />
+                {errors.name && <Text style={styles.errors}>Wpisano błędnie imie.</Text>}
+            </View>
+            <View style={styles.inputContainer}>
+                <Text style={styles.label}>Nazwisko</Text>
+                <Controller
+                    control={control}
+                    rules={{
+                        required: true,
+                    }}
+                    render={({ field: { onChange, onBlur, value } }) => (
+                        <TextInput
+                            style={styles.textInput}
+                            onBlur={onBlur}
+                            onChangeText={onChange}
+                            value={value}
+                            placeholder={'Wpisz swoje nazwisko'}
+                            placeholderTextColor={'#000000'}
+                        />
+                    )}
+                    name="surname"
+                />
+                {errors.surname && <Text style={styles.errors}>Wpisano błędnie nazwisko.</Text>}
+            </View>
             <View style={styles.inputContainer}>
                 <Text style={styles.label}>E-mail</Text>
                 <Controller
@@ -35,12 +78,12 @@ const Login = () => {
                             placeholderTextColor={'#000000'}
                         />
                     )}
-                    name="username"
+                    name="email"
                 />
-                {errors.username && <Text style={styles.errors}>Wpisano błędny e-mail.</Text>}
+                {errors.email && <Text style={styles.errors}>Wpisano błędny e-mail.</Text>}
             </View>
             <View style={styles.inputContainer}>
-                <Text style={styles.label}>Hasło</Text>
+                <Text style={styles.label}>Numer telefonu</Text>
                 <Controller
                     control={control}
                     rules={{
@@ -52,31 +95,23 @@ const Login = () => {
                             onBlur={onBlur}
                             onChangeText={onChange}
                             value={value}
-                            placeholder={'Wpisz swoje hasło'}
+                            placeholder={'Wpisz swój numer telefonu'}
                             placeholderTextColor={'#000000'}
                         />
                     )}
-                    name="password"
+                    name="phone"
                 />
-                {errors.password && <Text style={styles.errors}>Wpisano błędne hasło.</Text>}
+                {errors.phone && <Text style={styles.errors}>Wpisano błędny enumer telefonu.</Text>}
             </View>
             <TouchableOpacity style={styles.button} >
-                <Text style={styles.buttonText} onPress={handleSubmit(onSubmit)}>Zaloguj się</Text>
+                <Text style={styles.buttonText} onPress={handleSubmit(onSubmit)}>Zarejestruj się</Text>
             </TouchableOpacity>
-            <View style={styles.informationContainer}>
-                <TouchableOpacity onPress={() => navigation.navigate('Register')}>
-                    <Text style={styles.textInformation}>Utwórz konto</Text>
-                </TouchableOpacity>
-                <TouchableOpacity onPress={() => navigation.navigate('ForgetPassword')}>
-                    <Text style={styles.textInformation}>Zapomniałem hasła</Text>
-                </TouchableOpacity>
-            </View>
         </View>
     )
 }
 
 const styles = StyleSheet.create({
-    loginContainer: {
+    registerContainer: {
         paddingHorizontal: 25,
         paddingTop: 50,
     },
@@ -110,18 +145,6 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         backgroundColor: '#086ad8',
     },
-    informationContainer: {
-        flexDirection: 'row',
-        justifyContent: 'flex-end',
-        marginTop: 30,
-    },
-    textInformation: {
-        paddingLeft: 30,
-        paddingTop: 20,
-    },
-    errors: {
-        marginTop: 5,
-    },
 });
 
-export default Login;
+export default Register;

@@ -66,10 +66,10 @@ const styles = StyleSheet.create({
     },
     label: {
         position: 'absolute',
-        top: '-27px',
+        top: -27,
         left: 0,
         fontSize: 16,
-        fontWeight: 600,
+        fontWeight: "600",
     },
     inputContainer: {
         position: 'relative',
@@ -87,7 +87,7 @@ const styles = StyleSheet.create({
         paddingVertical: 15,
         textAlign: 'center',
         color: '#ffffff',
-        fontWeight: 600,
+        fontWeight: "600",
     },
     button: {
         borderRadius: 5,
@@ -112,7 +112,7 @@ const styles = StyleSheet.create({
     },
     popupText: {
         fontSize: 16,
-        fontWeight: 500,
+        fontWeight: '500',
         textAlign: 'center',
         paddingBottom: 20,
     },
@@ -125,7 +125,7 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         paddingHorizontal: 20,
         paddingVertical: 10,
-        fontWeight: 500,
+        fontWeight: '500',
     },
     popupCloseButton: {
         backgroundColor: '#086ad8',

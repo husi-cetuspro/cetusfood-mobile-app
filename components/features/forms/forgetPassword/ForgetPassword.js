@@ -1,28 +1,45 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { StyleSheet, View, Text, TextInput, TouchableOpacity } from 'react-native';
+import { useForm, Controller } from "react-hook-form";
+import { useNavigation } from '@react-navigation/native';
 
 const ForgetPassword = () => {
-    const [text, setText] = useState();
+    const navigation = useNavigation();
+    const { control, handleSubmit, formState: { errors } } = useForm({
+        defaultValues: {
+            email: ''
+        }
+    });
+    const onSubmit = data => {
+        console.log(data)
+        navigation.navigate('NewPassword');
+    };
     return (
         <View style={styles.forgetPasswordContainer}>
             <View style={styles.inputContainer}>
                 <Text style={styles.label}>E-mail</Text>
-                <TextInput placeholderTextColor={'#000000'} style={styles.textInput} placeholder={'Wpisz swój adres e-mail'} value={text} onChangeText={setText} />
+                <Controller
+                    control={control}
+                    rules={{
+                        required: true,
+                    }}
+                    render={({ field: { onChange, onBlur, value } }) => (
+                        <TextInput
+                            style={styles.textInput}
+                            onBlur={onBlur}
+                            onChangeText={onChange}
+                            value={value}
+                            placeholder={'Wpisz swój adres e-mail'}
+                            placeholderTextColor={'#000000'}
+                        />
+                    )}
+                    name="email"
+                />
+                {errors.email && <Text style={styles.errors}>Wpisano błędny e-mail.</Text>}
             </View>
             <TouchableOpacity style={styles.button} >
-                <Text style={styles.buttonText}>Dalej</Text>
+                <Text style={styles.buttonText} onPress={handleSubmit(onSubmit)}>Dalej</Text>
             </TouchableOpacity>
-            {/* <View style={styles.inputContainer}>
-                <Text style={styles.label}>Nowe hasło</Text>
-                <TextInput placeholderTextColor={'#000000'} style={styles.textInput} placeholder={'Wpisz nowe hasło'} value={text} onChangeText={setText} />
-            </View>
-            <View style={styles.inputContainer}>
-                <Text style={styles.label}>Powtórz nowe hasło</Text>
-                <TextInput placeholderTextColor={'#000000'} style={styles.textInput} placeholder={'Wpisz nowe hasło'} value={text} onChangeText={setText} />
-            </View>
-            <TouchableOpacity style={styles.button} >
-                <Text style={styles.buttonText}>Ustaw hasło</Text>
-            </TouchableOpacity> */}
         </View>
     )
 }
@@ -34,10 +51,10 @@ const styles = StyleSheet.create({
     },
     label: {
         position: 'absolute',
-        top: '-27px',
+        top: -27,
         left: 0,
         fontSize: 16,
-        fontWeight: 600,
+        fontWeight: "600",
     },
     inputContainer: {
         position: 'relative',
@@ -56,7 +73,7 @@ const styles = StyleSheet.create({
         paddingVertical: 15,
         textAlign: 'center',
         color: '#ffffff',
-        fontWeight: 600,
+        fontWeight: "600",
     },
     button: {
         borderRadius: 5,
