@@ -6,7 +6,7 @@ import User from '../features/user/User';
 export default function HomePage() {
   return (
     <View style={styles.container}>
-      <Form textAreaLabel={'Co chciałbyś zamówić?'} textAreaPlaceholder={'Wprowadź zamówienie'} buttonSend={'Złóż zamówienie'} />
+      <Form selectListLabel={'Nazwa restauracji'} textAreaLabel={'Co chciałbyś zamówić?'} textAreaPlaceholder={'Wprowadź zamówienie'} buttonSend={'Złóż zamówienie'} />
       {/* <User /> */}
     </View>
   );

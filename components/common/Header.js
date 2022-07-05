@@ -13,7 +13,9 @@ const styles = StyleSheet.create({
     headerContainer:{
         paddingHorizontal: 25,
         paddingVertical: 15,
-        backgroundColor: '#dbdbdb',
+        borderBottomWidth: 3,
+        borderColor: '#086ad8',
+        marginBottom: 10,
     },
     logo:{
         minHeight: 75,

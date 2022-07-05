@@ -7,7 +7,7 @@ const LoginPage = () => {
     return (
         <View style={styles.loginPageContainer}>
             <Image style={styles.logo} source={require('../../../assets/logoLoginPage.png')} />
-            {/* <Login/> */}
+            <Login/>
             {/* <ForgetPassword /> */}
         </View>
     )

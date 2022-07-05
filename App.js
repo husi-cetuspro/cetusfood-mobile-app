@@ -10,11 +10,11 @@ import RestaurantSuggestion from './components/features/forms/restaurantSuggesti
 export default function App() {
   return (
     <View style={styles.container}>
-      {/* <LoginPage/> */}
-      <Header/>
-      <HomePage/>
+      <LoginPage/>
+      {/* <Header/> */}
+      {/* <HomePage/> */}
       {/* <RestaurantSuggestion/> */}
-      <Footer /> 
+      {/* <Footer />  */}
     </View>
   );
 }
