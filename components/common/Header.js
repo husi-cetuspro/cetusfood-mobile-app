@@ -13,9 +13,7 @@ const styles = StyleSheet.create({
     headerContainer:{
         paddingHorizontal: 25,
         paddingVertical: 15,
-        borderBottomWidth: 3,
-        borderColor: '#086ad8',
-        marginBottom: 10,
+        marginTop: '10%',
     },
     logo:{
         maxHeight: 75,

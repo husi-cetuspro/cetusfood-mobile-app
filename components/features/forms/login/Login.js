@@ -13,7 +13,7 @@ const Login = () => {
     });
     const onSubmit = data => {
         console.log(data)
-        navigation.navigate('Home');
+        navigation.navigate('Form');
     };
 
     return (
