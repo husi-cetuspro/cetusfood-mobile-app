@@ -1,12 +1,22 @@
 import React, { useState } from 'react';
 import { StyleSheet, View, Text, TextInput, TouchableOpacity, Modal } from 'react-native';
 import SelectDropdown from 'react-native-select-dropdown';
-import GenericScreen from '../../common/GenericScreen'
+import GenericScreen from '../../common/GenericScreen';
+import { useForm, Controller } from "react-hook-form";
 
 const Form = (props) => {
-    const [text, setText] = useState();
     const [modalVisible, setModalVisible] = useState(false);
-    const restaurants = ["Pyszne.pl", "Pizzeria", "McDonald 's", "KFC"]
+    const restaurants = ["Pyszne.pl", "Pizzeria", "McDonald 's", "KFC"];
+    const { control, handleSubmit, formState: { errors } } = useForm({
+        defaultValues: {
+            restaurants: '',
+            order: ''
+        }
+    });
+    const onSubmit = data => {
+        console.log(data);
+        () => setModalVisible(true);
+    };
     return (
         <GenericScreen>
             <View style={styles.formContainer}>
@@ -16,7 +26,7 @@ const Form = (props) => {
                         data={restaurants}
                         defaultButtonText={'Wybierz opcje'}
                         buttonStyle={{ width: '100%', justifyContent: 'flex-end', borderWidth: 2, borderRadius: 5, paddingVertical: 10, paddingHorizontal: 10 }}
-                        dropdownStyle={{ backgroundColor: '#fff', paddingHorizontal: 10, borderRadius: 5, maxHeight: 150, paddingBottom: 10 }}
+                        dropdownStyle={{ backgroundColor: '#fff', paddingHorizontal: 10, borderRadius: 5, paddingBottom: 10 }}
                         rowStyle={{ paddingVertical: 10, borderBottomWidth: 2 }}
                         onSelect={(selectedItem, index) => {
                             console.log(selectedItem, index)
@@ -28,15 +38,24 @@ const Form = (props) => {
                             return item
                         }}
                     />
-
                 </View>
                 <View style={styles.inputContainer}>
                     <Text style={styles.label}>Wprowadź zamówienie</Text>
-                    <TextInput multiline={true} numberOfLines={10} placeholderTextColor={'#000000'} style={styles.textInput} placeholder={'Wprowadź zamówienie'} value={text} onChangeText={setText} />
+                    <Controller
+                        control={control}
+                        rules={{
+                            required: true,
+                        }}
+                        render={({ field: { onChange, onBlur, value } }) => (
+                            <TextInput textAlignVertical={'top'} onBlur={onBlur} onChangeText={onChange} value={value} multiline={true} numberOfLines={10} placeholderTextColor={'#000000'} style={[styles.textInput, { maxHeight: 190 }]} placeholder={'Wprowadź zamówienie'} />
+                        )}
+                        name="order"
+                    />
+                    {errors.order && <Text style={styles.errors}>Wpisano błędnie imie.</Text>}
                 </View>
                 <View style={styles.inputContainer}>
                     <TouchableOpacity style={styles.button} >
-                        <Text onPress={() => setModalVisible(true)} style={styles.buttonText}>Złóż zamówienie</Text>
+                        <Text onPress={handleSubmit(onSubmit)} style={styles.buttonText}>Złóż zamówienie</Text>
                     </TouchableOpacity>
                 </View>
                 <Modal
@@ -64,8 +83,7 @@ const Form = (props) => {
 
 const styles = StyleSheet.create({
     formContainer: {
-        paddingHorizontal: 25,
-        paddingTop: 50,
+        paddingTop: 40,
     },
     label: {
         position: 'absolute',

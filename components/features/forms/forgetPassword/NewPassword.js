@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { StyleSheet, View, Text, TextInput, TouchableOpacity } from 'react-native';
 import { useForm, Controller } from "react-hook-form";
 import { useNavigation } from '@react-navigation/native';
+import LoginScreen from '../../../common/LoginScreen';
 
 const ForgetPassword = () => {
     const navigation = useNavigation();
@@ -16,58 +17,62 @@ const ForgetPassword = () => {
         navigation.navigate('Login');
     };
     return (
-        <View style={styles.forgetPasswordContainer}>
-            <View style={styles.inputContainer}>
-                <Text style={styles.label}>Nowe hasło</Text>
-                <Controller
-                    control={control}
-                    rules={{
-                        required: true,
-                    }}
-                    render={({ field: { onChange, onBlur, value } }) => (
-                        <TextInput
-                            style={styles.textInput}
-                            onBlur={onBlur}
-                            onChangeText={onChange}
-                            value={value}
-                            placeholderTextColor={'#000000'}
-                            placeholder={'Wpisz nowe hasło'}
-                        />
-                    )}
-                    name="newPassword"
-                />
+        <LoginScreen>
+            <View style={styles.forgetPasswordContainer}>
+                <View style={styles.inputContainer}>
+                    <Text style={styles.label}>Nowe hasło</Text>
+                    <Controller
+                        control={control}
+                        rules={{
+                            required: true,
+                        }}
+                        render={({ field: { onChange, onBlur, value } }) => (
+                            <TextInput
+                                style={styles.textInput}
+                                onBlur={onBlur}
+                                onChangeText={onChange}
+                                value={value}
+                                placeholderTextColor={'#000000'}
+                                placeholder={'Wpisz nowe hasło'}
+                                secureTextEntry={true}
+                            />
+                        )}
+                        name="newPassword"
+                    />
+                </View>
+                <View style={styles.inputContainer}>
+                    <Text style={styles.label}>Powtórz nowe hasło</Text>
+                    <Controller
+                        control={control}
+                        rules={{
+                            required: true,
+                        }}
+                        render={({ field: { onChange, onBlur, value } }) => (
+                            <TextInput
+                                style={styles.textInput}
+                                onBlur={onBlur}
+                                onChangeText={onChange}
+                                value={value}
+                                placeholderTextColor={'#000000'}
+                                placeholder={'Wpisz nowe hasło'}
+                                secureTextEntry={true}
+                            />
+                        )}
+                        name="reduplicatePassword"
+                    />
+                </View>
+                <TouchableOpacity style={styles.button} >
+                    <Text style={styles.buttonText} onPress={handleSubmit(onSubmit)}>Ustaw hasło</Text>
+                </TouchableOpacity>
             </View>
-            <View style={styles.inputContainer}>
-                <Text style={styles.label}>Powtórz nowe hasło</Text>
-                <Controller
-                    control={control}
-                    rules={{
-                        required: true,
-                    }}
-                    render={({ field: { onChange, onBlur, value } }) => (
-                        <TextInput
-                            style={styles.textInput}
-                            onBlur={onBlur}
-                            onChangeText={onChange}
-                            value={value}
-                            placeholderTextColor={'#000000'}
-                            placeholder={'Wpisz nowe hasło'}
-                        />
-                    )}
-                    name="reduplicatePassword"
-                />
-            </View>
-            <TouchableOpacity style={styles.button} >
-                <Text style={styles.buttonText} onPress={handleSubmit(onSubmit)}>Ustaw hasło</Text>
-            </TouchableOpacity>
-        </View>
+        </LoginScreen>
     )
 }
 
 const styles = StyleSheet.create({
     forgetPasswordContainer: {
         paddingHorizontal: 25,
-        paddingTop: 50,
+        paddingTop: 30,
     },
     label: {
         position: 'absolute',

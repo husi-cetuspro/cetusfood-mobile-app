@@ -2,6 +2,7 @@ import React from 'react';
 import { StyleSheet, View, Text, TextInput, TouchableOpacity } from 'react-native';
 import { useForm, Controller } from "react-hook-form";
 import { useNavigation } from '@react-navigation/native';
+import LoginScreen from '../../../common/LoginScreen';
 
 const ForgetPassword = () => {
     const navigation = useNavigation();
@@ -15,39 +16,41 @@ const ForgetPassword = () => {
         navigation.navigate('NewPassword');
     };
     return (
-        <View style={styles.forgetPasswordContainer}>
-            <View style={styles.inputContainer}>
-                <Text style={styles.label}>E-mail</Text>
-                <Controller
-                    control={control}
-                    rules={{
-                        required: true,
-                    }}
-                    render={({ field: { onChange, onBlur, value } }) => (
-                        <TextInput
-                            style={styles.textInput}
-                            onBlur={onBlur}
-                            onChangeText={onChange}
-                            value={value}
-                            placeholder={'Wpisz swój adres e-mail'}
-                            placeholderTextColor={'#000000'}
-                        />
-                    )}
-                    name="email"
-                />
-                {errors.email && <Text style={styles.errors}>Wpisano błędny e-mail.</Text>}
+        <LoginScreen>
+            <View style={styles.forgetPasswordContainer}>
+                <View style={styles.inputContainer}>
+                    <Text style={styles.label}>E-mail</Text>
+                    <Controller
+                        control={control}
+                        rules={{
+                            required: true,
+                        }}
+                        render={({ field: { onChange, onBlur, value } }) => (
+                            <TextInput
+                                style={styles.textInput}
+                                onBlur={onBlur}
+                                onChangeText={onChange}
+                                value={value}
+                                placeholder={'Wpisz swój adres e-mail'}
+                                placeholderTextColor={'#000000'}
+                            />
+                        )}
+                        name="email"
+                    />
+                    {errors.email && <Text style={styles.errors}>Wpisano błędny e-mail.</Text>}
+                </View>
+                <TouchableOpacity style={styles.button} >
+                    <Text style={styles.buttonText} onPress={handleSubmit(onSubmit)}>Dalej</Text>
+                </TouchableOpacity>
             </View>
-            <TouchableOpacity style={styles.button} >
-                <Text style={styles.buttonText} onPress={handleSubmit(onSubmit)}>Dalej</Text>
-            </TouchableOpacity>
-        </View>
+        </LoginScreen>
     )
 }
 
 const styles = StyleSheet.create({
     forgetPasswordContainer: {
         paddingHorizontal: 25,
-        paddingTop: 50,
+        paddingTop: 30,
     },
     label: {
         position: 'absolute',

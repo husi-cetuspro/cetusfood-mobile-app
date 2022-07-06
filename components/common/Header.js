@@ -16,8 +16,8 @@ const styles = StyleSheet.create({
         marginTop: '10%',
     },
     logo:{
-        maxHeight: 75,
-        width: 160,
+        height: 90,
+        width: 180,
     }
 });
 

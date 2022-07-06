@@ -2,83 +2,87 @@ import React from 'react';
 import { StyleSheet, View, Text, TextInput, TouchableOpacity } from 'react-native';
 import { useForm, Controller } from "react-hook-form";
 import { useNavigation } from '@react-navigation/native';
+import LoginScreen from '../../../common/LoginScreen';
 
 const Login = () => {
     const navigation = useNavigation();
     const { control, handleSubmit, formState: { errors } } = useForm({
         defaultValues: {
-            username: '',
+            email: '',
             password: ''
         }
     });
     const onSubmit = data => {
-        console.log(data)
+        console.log(data);
         navigation.navigate('Form');
     };
 
     return (
-        <View style={styles.loginContainer}>
-            <View style={styles.inputContainer}>
-                <Text style={styles.label}>E-mail</Text>
-                <Controller
-                    control={control}
-                    rules={{
-                        required: true,
-                    }}
-                    render={({ field: { onChange, onBlur, value } }) => (
-                        <TextInput
-                            style={styles.textInput}
-                            onBlur={onBlur}
-                            onChangeText={onChange}
-                            value={value}
-                            placeholder={'Wpisz swój adres e-mail'}
-                            placeholderTextColor={'#000000'}
-                        />
-                    )}
-                    name="username"
-                />
-                {errors.username && <Text style={styles.errors}>Wpisano błędny e-mail.</Text>}
-            </View>
-            <View style={styles.inputContainer}>
-                <Text style={styles.label}>Hasło</Text>
-                <Controller
-                    control={control}
-                    rules={{
-                        required: true,
-                    }}
-                    render={({ field: { onChange, onBlur, value } }) => (
-                        <TextInput
-                            style={styles.textInput}
-                            onBlur={onBlur}
-                            onChangeText={onChange}
-                            value={value}
-                            placeholder={'Wpisz swoje hasło'}
-                            placeholderTextColor={'#000000'}
-                        />
-                    )}
-                    name="password"
-                />
-                {errors.password && <Text style={styles.errors}>Wpisano błędne hasło.</Text>}
-            </View>
-            <TouchableOpacity style={styles.button} >
-                <Text style={styles.buttonText} onPress={handleSubmit(onSubmit)}>Zaloguj się</Text>
-            </TouchableOpacity>
-            <View style={styles.informationContainer}>
-                <TouchableOpacity onPress={() => navigation.navigate('Register')}>
-                    <Text style={styles.textInformation}>Utwórz konto</Text>
+        <LoginScreen>
+            <View style={styles.loginContainer}>
+                <View style={styles.inputContainer}>
+                    <Text style={styles.label}>E-mail</Text>
+                    <Controller
+                        control={control}
+                        rules={{
+                            required: true,
+                        }}
+                        render={({ field: { onChange, onBlur, value } }) => (
+                            <TextInput
+                                style={styles.textInput}
+                                onBlur={onBlur}
+                                onChangeText={onChange}
+                                value={value}
+                                placeholder={'Wpisz swój adres e-mail'}
+                                placeholderTextColor={'#000000'}
+                            />
+                        )}
+                        name="email"
+                    />
+                    {errors.email && <Text style={styles.errors}>Wpisano błędny e-mail.</Text>}
+                </View>
+                <View style={styles.inputContainer}>
+                    <Text style={styles.label}>Hasło</Text>
+                    <Controller
+                        control={control}
+                        rules={{
+                            required: true,
+                        }}
+                        render={({ field: { onChange, onBlur, value } }) => (
+                            <TextInput
+                                style={styles.textInput}
+                                onBlur={onBlur}
+                                onChangeText={onChange}
+                                value={value}
+                                placeholder={'Wpisz swoje hasło'}
+                                placeholderTextColor={'#000000'}
+                                secureTextEntry={true}
+                            />
+                        )}
+                        name="password"
+                    />
+                    {errors.password && <Text style={styles.errors}>Wpisano błędne hasło.</Text>}
+                </View>
+                <TouchableOpacity style={styles.button} >
+                    <Text style={styles.buttonText} onPress={handleSubmit(onSubmit)}>Zaloguj się</Text>
                 </TouchableOpacity>
-                <TouchableOpacity onPress={() => navigation.navigate('ForgetPassword')}>
-                    <Text style={styles.textInformation}>Zapomniałem hasła</Text>
-                </TouchableOpacity>
+                <View style={styles.informationContainer}>
+                    <TouchableOpacity onPress={() => navigation.navigate('Register')}>
+                        <Text style={styles.textInformation}>Utwórz konto</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => navigation.navigate('ForgetPassword')}>
+                        <Text style={styles.textInformation}>Zapomniałem hasła</Text>
+                    </TouchableOpacity>
+                </View>
             </View>
-        </View>
+        </LoginScreen>
     )
 }
 
 const styles = StyleSheet.create({
     loginContainer: {
         paddingHorizontal: 25,
-        paddingTop: 50,
+        paddingTop: 30,
     },
     label: {
         position: 'absolute',

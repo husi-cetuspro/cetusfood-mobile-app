@@ -2,14 +2,16 @@ import React from 'react';
 import { StyleSheet, View, TouchableOpacity } from 'react-native';
 import { SimpleLineIcons } from '@expo/vector-icons';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
 
 const Footer = () => {
+    const navigation = useNavigation();
     return (
         <View style={styles.footerContainer}>
-            <TouchableOpacity style={[styles.itemLeft, styles.item]}>
+            <TouchableOpacity onPress={() => navigation.navigate('Form')} style={[styles.itemLeft, styles.item]}>
                 <MaterialCommunityIcons name="cart-outline" size={26} color="white" />
             </TouchableOpacity>
-            <TouchableOpacity style={[styles.itemRight, styles.item]}>
+            <TouchableOpacity onPress={() => navigation.navigate('User')} style={[styles.itemRight, styles.item]}>
                 <SimpleLineIcons name="user" size={24} color="white" />
             </TouchableOpacity>
         </View>

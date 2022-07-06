@@ -1,26 +1,36 @@
 import React from 'react';
-import { StyleSheet, View, Text } from 'react-native';
+import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
+import GenericScreen from '../../common/GenericScreen';
+import { useNavigation } from '@react-navigation/native';
 
 const User = () => {
+    const navigation = useNavigation();
     return (
-        <View style={styles.userContainer}>
-            <View style={styles.userContent}>
-                <Text style={styles.userText}>Dodaj propozycję restauracji</Text>
-                <Text style={styles.userText}>Historia zamówień</Text>
-                <Text style={styles.userText}>Wyloguj się</Text>
+        <GenericScreen>
+            <View style={styles.userContainer}>
+                <View>
+                    <TouchableOpacity onPress={() => navigation.navigate('RestaurantSuggestion')}>
+                        <Text style={styles.userText}>Dodaj propozycję restauracji</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => navigation.navigate('HistoryOrder')}>
+                        <Text style={styles.userText}>Historia zamówień</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => navigation.navigate('Login')}>
+                        <Text style={styles.userText}>Wyloguj się</Text>
+                    </TouchableOpacity>
+                </View>
             </View>
-        </View>
+        </GenericScreen>
     )
 }
 
 const styles = StyleSheet.create({
-    userContainer:{
-        marginHorizontal: 25,
-        marginVertical: 40,
+    userContainer: {
         borderTopWidth: 2.5,
         borderColor: '#086ad8',
+        marginTop: 30,
     },
-    userText:{
+    userText: {
         borderColor: '#086ad8',
         paddingVertical: 20,
         borderBottomWidth: 2.5,

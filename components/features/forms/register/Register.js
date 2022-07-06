@@ -1,7 +1,8 @@
 import React from 'react';
-import { StyleSheet, View, Text, TextInput, TouchableOpacity } from 'react-native';
+import { StyleSheet, View, Text, TextInput, TouchableOpacity, SafeAreaView, ScrollView  } from 'react-native';
 import { useForm, Controller } from "react-hook-form";
 import { useNavigation } from '@react-navigation/native';
+import LoginScreen from '../../../common/LoginScreen';
 
 const Register = () => {
     const navigation = useNavigation();
@@ -10,7 +11,9 @@ const Register = () => {
             name: '',
             surname: '',
             email: '',
-            phone: ''
+            phone: '',
+            password: '',
+            reduplicatePassword: ''
         }
     });
     const onSubmit = data => {
@@ -18,102 +21,147 @@ const Register = () => {
         navigation.navigate('Login');
     };
     return (
-        <View style={styles.registerContainer}>
-            <View style={styles.inputContainer}>
-                <Text style={styles.label}>Imię</Text>
-                <Controller
-                    control={control}
-                    rules={{
-                        required: true,
-                    }}
-                    render={({ field: { onChange, onBlur, value } }) => (
-                        <TextInput
-                            style={styles.textInput}
-                            onBlur={onBlur}
-                            onChangeText={onChange}
-                            value={value}
-                            placeholder={'Wpisz swoje imię'}
-                            placeholderTextColor={'#000000'}
-                        />
-                    )}
-                    name="name"
-                />
-                {errors.name && <Text style={styles.errors}>Wpisano błędnie imie.</Text>}
+        <LoginScreen>
+            <View style={styles.registerContainer}>
+                <View style={styles.inputContainer}>
+                    <Text style={styles.label}>Imię</Text>
+                    <Controller
+                        control={control}
+                        rules={{
+                            required: true,
+                        }}
+                        render={({ field: { onChange, onBlur, value } }) => (
+                            <TextInput
+                                style={styles.textInput}
+                                onBlur={onBlur}
+                                onChangeText={onChange}
+                                value={value}
+                                placeholder={'Wpisz swoje imię'}
+                                placeholderTextColor={'#000000'}
+                            />
+                        )}
+                        name="name"
+                    />
+                    {errors.name && <Text style={styles.errors}>Wpisano błędnie imie.</Text>}
+                </View>
+                <View style={styles.inputContainer}>
+                    <Text style={styles.label}>Nazwisko</Text>
+                    <Controller
+                        control={control}
+                        rules={{
+                            required: true,
+                        }}
+                        render={({ field: { onChange, onBlur, value } }) => (
+                            <TextInput
+                                style={styles.textInput}
+                                onBlur={onBlur}
+                                onChangeText={onChange}
+                                value={value}
+                                placeholder={'Wpisz swoje nazwisko'}
+                                placeholderTextColor={'#000000'}
+                            />
+                        )}
+                        name="surname"
+                    />
+                    {errors.surname && <Text style={styles.errors}>Wpisano błędnie nazwisko.</Text>}
+                </View>
+                <View style={styles.inputContainer}>
+                    <Text style={styles.label}>E-mail</Text>
+                    <Controller
+                        control={control}
+                        rules={{
+                            required: true,
+                        }}
+                        render={({ field: { onChange, onBlur, value } }) => (
+                            <TextInput
+                                style={styles.textInput}
+                                onBlur={onBlur}
+                                onChangeText={onChange}
+                                value={value}
+                                placeholder={'Wpisz swój adres e-mail'}
+                                placeholderTextColor={'#000000'}
+                            />
+                        )}
+                        name="email"
+                    />
+                    {errors.email && <Text style={styles.errors}>Wpisano błędny e-mail.</Text>}
+                </View>
+                <View style={styles.inputContainer}>
+                    <Text style={styles.label}>Numer telefonu</Text>
+                    <Controller
+                        control={control}
+                        rules={{
+                            required: true,
+                        }}
+                        render={({ field: { onChange, onBlur, value } }) => (
+                            <TextInput
+                                style={styles.textInput}
+                                onBlur={onBlur}
+                                onChangeText={onChange}
+                                value={value}
+                                placeholder={'Wpisz swój numer telefonu'}
+                                placeholderTextColor={'#000000'}
+                            />
+                        )}
+                        name="phone"
+                    />
+                    {errors.phone && <Text style={styles.errors}>Wpisano błędny enumer telefonu.</Text>}
+                </View>
+                <View style={styles.inputContainer}>
+                    <Text style={styles.label}>Wpisz hasło</Text>
+                    <Controller
+                        control={control}
+                        rules={{
+                            required: true,
+                        }}
+                        render={({ field: { onChange, onBlur, value } }) => (
+                            <TextInput
+                                style={styles.textInput}
+                                onBlur={onBlur}
+                                onChangeText={onChange}
+                                value={value}
+                                placeholder={'Wpisz hasło'}
+                                placeholderTextColor={'#000000'}
+                                secureTextEntry={true}
+                            />
+                        )}
+                        name="password"
+                    />
+                </View>
+                <View style={styles.inputContainer}>
+                    <Text style={styles.label}>Powtórz hasło</Text>
+                    <Controller
+                        control={control}
+                        rules={{
+                            required: true,
+                        }}
+                        render={({ field: { onChange, onBlur, value } }) => (
+                            <TextInput
+                                style={styles.textInput}
+                                onBlur={onBlur}
+                                onChangeText={onChange}
+                                value={value}
+                                placeholder={'Wpisz hasło'}
+                                placeholderTextColor={'#000000'}
+                                secureTextEntry={true}
+                            />
+                        )}
+                        name="reduplicatePassword"
+                    />
+                    {errors.phone && <Text style={styles.errors}>Wpisano błędny enumer telefonu.</Text>}
+                </View>
+                <TouchableOpacity style={styles.button} >
+                    <Text style={styles.buttonText} onPress={handleSubmit(onSubmit)}>Zarejestruj się</Text>
+                </TouchableOpacity>
             </View>
-            <View style={styles.inputContainer}>
-                <Text style={styles.label}>Nazwisko</Text>
-                <Controller
-                    control={control}
-                    rules={{
-                        required: true,
-                    }}
-                    render={({ field: { onChange, onBlur, value } }) => (
-                        <TextInput
-                            style={styles.textInput}
-                            onBlur={onBlur}
-                            onChangeText={onChange}
-                            value={value}
-                            placeholder={'Wpisz swoje nazwisko'}
-                            placeholderTextColor={'#000000'}
-                        />
-                    )}
-                    name="surname"
-                />
-                {errors.surname && <Text style={styles.errors}>Wpisano błędnie nazwisko.</Text>}
-            </View>
-            <View style={styles.inputContainer}>
-                <Text style={styles.label}>E-mail</Text>
-                <Controller
-                    control={control}
-                    rules={{
-                        required: true,
-                    }}
-                    render={({ field: { onChange, onBlur, value } }) => (
-                        <TextInput
-                            style={styles.textInput}
-                            onBlur={onBlur}
-                            onChangeText={onChange}
-                            value={value}
-                            placeholder={'Wpisz swój adres e-mail'}
-                            placeholderTextColor={'#000000'}
-                        />
-                    )}
-                    name="email"
-                />
-                {errors.email && <Text style={styles.errors}>Wpisano błędny e-mail.</Text>}
-            </View>
-            <View style={styles.inputContainer}>
-                <Text style={styles.label}>Numer telefonu</Text>
-                <Controller
-                    control={control}
-                    rules={{
-                        required: true,
-                    }}
-                    render={({ field: { onChange, onBlur, value } }) => (
-                        <TextInput
-                            style={styles.textInput}
-                            onBlur={onBlur}
-                            onChangeText={onChange}
-                            value={value}
-                            placeholder={'Wpisz swój numer telefonu'}
-                            placeholderTextColor={'#000000'}
-                        />
-                    )}
-                    name="phone"
-                />
-                {errors.phone && <Text style={styles.errors}>Wpisano błędny enumer telefonu.</Text>}
-            </View>
-            <TouchableOpacity style={styles.button} >
-                <Text style={styles.buttonText} onPress={handleSubmit(onSubmit)}>Zarejestruj się</Text>
-            </TouchableOpacity>
-        </View>
+        </LoginScreen>
     )
 }
 
 const styles = StyleSheet.create({
     registerContainer: {
         paddingHorizontal: 25,
-        paddingTop: 50,
+        paddingTop: 30,
     },
     label: {
         position: 'absolute',
