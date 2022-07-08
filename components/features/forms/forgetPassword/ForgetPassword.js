@@ -12,7 +12,6 @@ const ForgetPassword = () => {
         }
     });
     const onSubmit = data => {
-        console.log(data)
         navigation.navigate('NewPassword');
     };
     return (

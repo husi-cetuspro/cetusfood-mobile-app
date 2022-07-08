@@ -11,7 +11,7 @@ const Login = () => {
     const navigation = useNavigation();
     const { control, handleSubmit, formState: { errors } } = useForm({
         defaultValues: {
-            email: 'kopfszmercen@gmail.com', 
+            email: 'kopfszmercen@gmail.com',
             password: 'qwerty'
         }
     });
@@ -28,13 +28,13 @@ const Login = () => {
                 if (response.status === 200) {
                     setToken(response.data.accessToken);
                 } else {
-                    throw new Error("An error has occurred");
+                    throw new Error("Wystąpił błąd");
                 }
             }).catch(error => {
-                alert(error?.message);
+                alert("Podano zły email lub hasło");
             }).finally(() => setIsLoading(false))
     };
-
+   
     return (
         <LoginScreen>
             <View style={styles.loginContainer}>

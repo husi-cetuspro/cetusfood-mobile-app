@@ -35,7 +35,7 @@ const Form = () => {
 
     const onSubmitFormHandler = async (event) => {
         if (!content.trim()) {
-            alert("Name or Email is invalid");
+            alert("Wprowadź poprawne dane");
             return;
         }
         setIsLoading(true);
@@ -45,12 +45,12 @@ const Form = () => {
                 content,
             });
             if (response.status === 201) {
-                alert(` You have created: ${JSON.stringify(response.data)}`);
+                alert(` Stworzono zamówienie o numerze: ${JSON.stringify(response.data)}`);
                 setIsLoading(false);
                 setRestaurantId('');
                 setContent('');
             } else {
-                throw new Error("An error has occurred");
+                throw new Error("Wystąpił błąd");
             }
         } catch (error) {
             alert(error.message);

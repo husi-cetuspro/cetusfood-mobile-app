@@ -49,10 +49,10 @@ const RestaurantSuggestion = () => {
                 setEmail('');
                 setUrl('');
             } else {
-                throw new Error("An error has occurred");
+                throw new Error("Wystąpił błąd");
             }
         } catch (error) {
-            alert("An error has occurred");
+            alert("Podano złe informacje");
             setIsLoading(false);
         }
     };

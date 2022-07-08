@@ -24,8 +24,6 @@ const Register = () => {
     const [isMailingAllowed, setIsMailingAllowed] = useState(true);
     const [isLoading, setIsLoading] = useState(false);
 
-    console.log(isRODOAllowed);
-
     const onSubmitFormHandler = async (event) => {
         if (!email.trim() || !password.trim() || !confirmPassword.trim()) {
             alert("Name or Email is invalid");
@@ -41,7 +39,6 @@ const Register = () => {
                 isMailingAllowed: true,
             });
             if (response.status === 201) {
-                console.log(JSON.stringify(response))
                 alert(` You have created: ${JSON.stringify(response.data)}`);
                 setIsLoading(false);
                 setEmail('');
@@ -51,10 +48,10 @@ const Register = () => {
                 setIsMailingAllowed(true);
                 navigation.navigate('Login');
             } else {
-                throw new Error("An error has occurred");
+                throw new Error("Wystąpił błąd");
             }
         } catch (error) {
-            alert(error.message);
+            alert("Podano złe informacje");
             setIsLoading(false);
         }
     };

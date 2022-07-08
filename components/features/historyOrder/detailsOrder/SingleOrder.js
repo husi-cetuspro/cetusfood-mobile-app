@@ -13,8 +13,7 @@ const SingleOrder = ({ route, navigation }) => {
         async function doGetRequest() {
             let res = await api.get(`/orders`);
             let data = res.data;
-            const singleOrder = data.flter(item => item.id === itemId)[0];
-            i
+            const singleOrder = data.filter(item => item.id === itemId)[0];
             setOrder(singleOrder);
         }
         doGetRequest();

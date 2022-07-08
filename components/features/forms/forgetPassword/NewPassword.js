@@ -13,7 +13,6 @@ const ForgetPassword = () => {
         }
     });
     const onSubmit = data => {
-        console.log(data)
         navigation.navigate('Login');
     };
     return (
