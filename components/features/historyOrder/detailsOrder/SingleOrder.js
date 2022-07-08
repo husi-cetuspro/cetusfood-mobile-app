@@ -1,16 +1,31 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
 import GenericScreen from '../../../common/GenericScreen';
 import { useNavigation } from '@react-navigation/native';
+import HistoryOrder from '../HistoryOrder';
+import { api } from '../../../../api/Api';
 
-const SingleOrder = () => {
-    const navigation = useNavigation();
+const SingleOrder = ({ route, navigation }) => {
+    const { itemId } = route.params;
+    const [order, setOrder] = useState({});
+
+    useEffect(() => {
+        async function doGetRequest() {
+            let res = await api.get(`/orders`);
+            let data = res.data;
+            const singleOrder = data.flter(item => item.id === itemId)[0];
+            i
+            setOrder(singleOrder);
+        }
+        doGetRequest();
+    }, []);
+
     return (
         <GenericScreen>
             <View style={styles.singleOrderContainer}>
                 <View style={styles.singleOrderContent}>
                     <Text style={[styles.singleOrderText, styles.singleOrderHeader]}>Numer zamówienia</Text>
-                    <Text style={styles.singleOrderText}>1</Text>
+                    <Text style={styles.singleOrderText}>{JSON.stringify(itemId)}</Text>
                 </View>
                 <View style={styles.singleOrderContent}>
                     <Text style={[styles.singleOrderText, styles.singleOrderHeader]}>Data złożenia</Text>
@@ -26,15 +41,7 @@ const SingleOrder = () => {
                 </View>
                 <View style={styles.singleContentOrder}>
                     <Text style={[styles.singleOrderText, styles.singleOrderHeader]}>Treść zamówienia:</Text>
-                    <Text style={[styles.singleOrderText, styles.singleContentOrderText]}>Zupa, Zupa, Zupa, Zupa, Zupa, Zupa, Zupa, Zupa Zupa, Zupa, Zupa, Zupa, Zupa, Zupa, Zupa, Zupa</Text>
-                </View>
-                <View style={styles.buttonContainer}>
-                    <TouchableOpacity style={styles.button}>
-                        <Text style={styles.buttonText}>Anuluj</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.button}>
-                        <Text style={styles.buttonText}>Edytuj</Text>
-                    </TouchableOpacity>
+                    <Text style={[styles.singleOrderText, styles.singleContentOrderText]}>{order.content}</Text>
                 </View>
             </View>
         </GenericScreen>
@@ -69,24 +76,6 @@ const styles = StyleSheet.create({
         fontSize: 15,
         fontWeight: '400',
         color: '#444',
-    },
-    buttonContainer:{
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-    },
-    buttonText: {
-        fontSize: 14,
-        textTransform: 'uppercase',
-        paddingVertical: 15,
-        textAlign: 'center',
-        color: '#ffffff',
-        fontWeight: "500",
-    },
-    button: {
-        borderRadius: 5,
-        marginTop: 30,
-        backgroundColor: '#086ad8',
-        width: '49%'
     },
 });
 

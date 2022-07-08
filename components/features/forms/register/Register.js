@@ -1,70 +1,75 @@
-import React from 'react';
-import { StyleSheet, View, Text, TextInput, TouchableOpacity, SafeAreaView, ScrollView  } from 'react-native';
+import React, { useState } from 'react';
+import { StyleSheet, View, Text, TextInput, TouchableOpacity } from 'react-native';
 import { useForm, Controller } from "react-hook-form";
 import { useNavigation } from '@react-navigation/native';
 import LoginScreen from '../../../common/LoginScreen';
+import { api } from "../../../../api/Api";
+import { useAuthContext } from '../../../../providers/AuthContextProvider';
+import { Checkbox } from 'react-native-paper';
 
 const Register = () => {
     const navigation = useNavigation();
     const { control, handleSubmit, formState: { errors } } = useForm({
         defaultValues: {
-            name: '',
-            surname: '',
             email: '',
-            phone: '',
             password: '',
-            reduplicatePassword: ''
+            confirmPassword: '',
         }
     });
-    const onSubmit = data => {
-        console.log(data)
-        navigation.navigate('Login');
+
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [confirmPassword, setConfirmPassword] = useState("");
+    const [isRODOAllowed, setIsRODOAllowed] = useState(false);
+    const [isMailingAllowed, setIsMailingAllowed] = useState(true);
+    const [isLoading, setIsLoading] = useState(false);
+
+    console.log(isRODOAllowed);
+
+    const onSubmitFormHandler = async (event) => {
+        if (!email.trim() || !password.trim() || !confirmPassword.trim()) {
+            alert("Name or Email is invalid");
+            return;
+        }
+        setIsLoading(true);
+        try {
+            const response = await api.post(`https://api.mobicarclub.st.cetuspro.com/v1/auth/register-user`, {
+                email,
+                password,
+                confirmPassword,
+                isRODOAllowed,
+                isMailingAllowed: true,
+            });
+            if (response.status === 201) {
+                console.log(JSON.stringify(response))
+                alert(` You have created: ${JSON.stringify(response.data)}`);
+                setIsLoading(false);
+                setEmail('');
+                setPassword('');
+                setConfirmPassword('');
+                setIsRODOAllowed(false);
+                setIsMailingAllowed(true);
+                navigation.navigate('Login');
+            } else {
+                throw new Error("An error has occurred");
+            }
+        } catch (error) {
+            alert(error.message);
+            setIsLoading(false);
+        }
+    };
+    const onChangeEmailHandler = (email) => {
+        setEmail(email);
+    };
+    const onChangePasswordHandler = (password) => {
+        setPassword(password);
+    };
+    const onChangeConfirmPasswordHandler = (confirmPassword) => {
+        setConfirmPassword(confirmPassword);
     };
     return (
         <LoginScreen>
             <View style={styles.registerContainer}>
-                <View style={styles.inputContainer}>
-                    <Text style={styles.label}>Imię</Text>
-                    <Controller
-                        control={control}
-                        rules={{
-                            required: true,
-                        }}
-                        render={({ field: { onChange, onBlur, value } }) => (
-                            <TextInput
-                                style={styles.textInput}
-                                onBlur={onBlur}
-                                onChangeText={onChange}
-                                value={value}
-                                placeholder={'Wpisz swoje imię'}
-                                placeholderTextColor={'#000000'}
-                            />
-                        )}
-                        name="name"
-                    />
-                    {errors.name && <Text style={styles.errors}>Wpisano błędnie imie.</Text>}
-                </View>
-                <View style={styles.inputContainer}>
-                    <Text style={styles.label}>Nazwisko</Text>
-                    <Controller
-                        control={control}
-                        rules={{
-                            required: true,
-                        }}
-                        render={({ field: { onChange, onBlur, value } }) => (
-                            <TextInput
-                                style={styles.textInput}
-                                onBlur={onBlur}
-                                onChangeText={onChange}
-                                value={value}
-                                placeholder={'Wpisz swoje nazwisko'}
-                                placeholderTextColor={'#000000'}
-                            />
-                        )}
-                        name="surname"
-                    />
-                    {errors.surname && <Text style={styles.errors}>Wpisano błędnie nazwisko.</Text>}
-                </View>
                 <View style={styles.inputContainer}>
                     <Text style={styles.label}>E-mail</Text>
                     <Controller
@@ -76,36 +81,15 @@ const Register = () => {
                             <TextInput
                                 style={styles.textInput}
                                 onBlur={onBlur}
-                                onChangeText={onChange}
-                                value={value}
+                                onChangeText={onChangeEmailHandler}
+                                editable={!isLoading}
+                                value={email}
                                 placeholder={'Wpisz swój adres e-mail'}
                                 placeholderTextColor={'#000000'}
                             />
                         )}
                         name="email"
                     />
-                    {errors.email && <Text style={styles.errors}>Wpisano błędny e-mail.</Text>}
-                </View>
-                <View style={styles.inputContainer}>
-                    <Text style={styles.label}>Numer telefonu</Text>
-                    <Controller
-                        control={control}
-                        rules={{
-                            required: true,
-                        }}
-                        render={({ field: { onChange, onBlur, value } }) => (
-                            <TextInput
-                                style={styles.textInput}
-                                onBlur={onBlur}
-                                onChangeText={onChange}
-                                value={value}
-                                placeholder={'Wpisz swój numer telefonu'}
-                                placeholderTextColor={'#000000'}
-                            />
-                        )}
-                        name="phone"
-                    />
-                    {errors.phone && <Text style={styles.errors}>Wpisano błędny enumer telefonu.</Text>}
                 </View>
                 <View style={styles.inputContainer}>
                     <Text style={styles.label}>Wpisz hasło</Text>
@@ -118,8 +102,9 @@ const Register = () => {
                             <TextInput
                                 style={styles.textInput}
                                 onBlur={onBlur}
-                                onChangeText={onChange}
-                                value={value}
+                                onChangeText={onChangePasswordHandler}
+                                editable={!isLoading}
+                                value={password}
                                 placeholder={'Wpisz hasło'}
                                 placeholderTextColor={'#000000'}
                                 secureTextEntry={true}
@@ -139,19 +124,32 @@ const Register = () => {
                             <TextInput
                                 style={styles.textInput}
                                 onBlur={onBlur}
-                                onChangeText={onChange}
-                                value={value}
+                                onChangeText={onChangeConfirmPasswordHandler}
+                                editable={!isLoading}
+                                value={confirmPassword}
                                 placeholder={'Wpisz hasło'}
                                 placeholderTextColor={'#000000'}
                                 secureTextEntry={true}
                             />
                         )}
-                        name="reduplicatePassword"
+                        name="confirmPassword"
                     />
-                    {errors.phone && <Text style={styles.errors}>Wpisano błędny enumer telefonu.</Text>}
                 </View>
-                <TouchableOpacity style={styles.button} >
-                    <Text style={styles.buttonText} onPress={handleSubmit(onSubmit)}>Zarejestruj się</Text>
+                <View style={styles.checkboxContainer}>
+                    <View style={styles.singleChecboxContainer}>
+                        <Checkbox
+                            status={isRODOAllowed ? 'checked' : 'unchecked'}
+                            onPress={() => {
+                                setIsRODOAllowed(!isRODOAllowed);
+                            }}
+                            color={'#086ad8'}
+                            uncheckColor={'red'}
+                        />
+                        <Text>isRODOAllowed</Text>
+                    </View>
+                </View>
+                <TouchableOpacity style={styles.button} disabled={isLoading} onPress={onSubmitFormHandler}>
+                    <Text style={styles.buttonText}>Zarejestruj się</Text>
                 </TouchableOpacity>
             </View>
         </LoginScreen>
@@ -180,6 +178,12 @@ const styles = StyleSheet.create({
         paddingVertical: 10,
         paddingHorizontal: 10,
         borderRadius: 5,
+        ...Platform.select({
+            ios: {
+                paddingVertical: 15,
+                fontSize: 16,
+            }
+        })
     },
     buttonText: {
         fontSize: 15,
@@ -192,6 +196,13 @@ const styles = StyleSheet.create({
     button: {
         borderRadius: 5,
         backgroundColor: '#086ad8',
+    },
+    checkboxContainer:{
+        paddingBottom: 20,
+    },
+    singleChecboxContainer:{
+        flexDirection: 'row',
+        alignItems: 'center',
     },
 });
 

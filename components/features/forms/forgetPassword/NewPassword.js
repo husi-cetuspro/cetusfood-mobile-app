@@ -91,6 +91,12 @@ const styles = StyleSheet.create({
         paddingVertical: 10,
         paddingHorizontal: 10,
         borderRadius: 5,
+        ...Platform.select({
+            ios:{
+                paddingVertical: 15,
+                fontSize: 16,
+            }
+        })
     },
     buttonText: {
         fontSize: 15,

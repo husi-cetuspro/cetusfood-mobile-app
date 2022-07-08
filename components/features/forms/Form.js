@@ -1,44 +1,169 @@
-import React, { useState } from 'react';
-import { StyleSheet, View, Text, TextInput, TouchableOpacity, Modal } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { StyleSheet, View, Text, TextInput, TouchableOpacity } from 'react-native';
 import SelectDropdown from 'react-native-select-dropdown';
 import GenericScreen from '../../common/GenericScreen';
 import { useForm, Controller } from "react-hook-form";
+import { api } from '../../../api/Api';
+import { useAuthContext } from '../../../providers/AuthContextProvider';
+import { FontAwesome } from '@expo/vector-icons';
 
-const Form = (props) => {
-    const [modalVisible, setModalVisible] = useState(false);
-    const restaurants = ["Pyszne.pl", "Pizzeria", "McDonald 's", "KFC"];
+const Form = () => {
+    const [restaurants, setRestaurants] = useState([]);
     const { control, handleSubmit, formState: { errors } } = useForm({
         defaultValues: {
-            restaurants: '',
-            order: ''
+            id: '',
+            restaurantId: '',
+            content: ''
         }
     });
-    const onSubmit = data => {
-        console.log(data);
-        () => setModalVisible(true);
+    useEffect(() => {
+        async function doGetRequest() {
+            let res = await api.get(`/restaurants`);
+            let data = res.data;
+            let rest = [];
+            data.forEach(element => {
+                rest.push({ restaurantId: element.id, name: element.name })
+            });
+            setRestaurants(rest);
+        }
+        doGetRequest();
+    }, []);
+
+    const [restaurantId, setRestaurantId] = useState([]);
+    const [content, setContent] = useState([]);
+    const [isLoading, setIsLoading] = useState(false);
+
+    const onSubmitFormHandler = async (event) => {
+        if (!content.trim()) {
+            alert("Name or Email is invalid");
+            return;
+        }
+        setIsLoading(true);
+        try {
+            const response = await api.post(`/orders`, {
+                restaurantId,
+                content,
+            });
+            if (response.status === 201) {
+                alert(` You have created: ${JSON.stringify(response.data)}`);
+                setIsLoading(false);
+                setRestaurantId('');
+                setContent('');
+            } else {
+                throw new Error("An error has occurred");
+            }
+        } catch (error) {
+            alert(error.message);
+            setIsLoading(false);
+        }
     };
+    const onChangeRestaurantIdHandler = (restaurantId) => {
+        setRestaurantId(restaurantId);
+    };
+    
+
+
+
+
+
+    // const [inputList, setInputList] = useState([
+    //     {
+    //         input: "",
+    //         input_rank: null
+    //     }
+    // ])
+
+    // const [isDisabled, setIsDisabled] = useState(false)
+
+    // useEffect(() => {
+    //     if (inputList.length > 0) {
+    //         inputList[inputList.length - 1].input === ""
+    //             ? setIsDisabled(true)
+    //             : setIsDisabled(false)
+    //     }
+    // })
+
+    // const handleListAdd = () => {
+    //     setInputList([
+    //         ...inputList,
+    //         {
+    //             input: "",
+    //             input_rank: null
+    //         }
+    //     ])
+    // }
+    // const handleInputChange = (event, index) => {
+    //     const { value } = event.target.value
+    //     const newInputList = [...inputList]
+    //     newInputList[index].input = value
+    //     newInputList[index].input_rank = index + 1
+    //     setInputList(newInputList)
+    // }
+
+    // const handleRemoveItem = (index) => {
+    //     const newList = [...inputList]
+    //     newList.splice(index, 1)
+    //     setInputList(newList)
+    // }
+
+    const onChangeContentHandler = (content) => {
+        setContent(content);
+    };
+
+
     return (
         <GenericScreen>
             <View style={styles.formContainer}>
                 <View style={styles.selectList}>
-                    <Text style={styles.label}>{'Nazwa restauracji'}</Text>
+                    <Text style={styles.label}>Nazwa restauracji</Text>
                     <SelectDropdown
                         data={restaurants}
                         defaultButtonText={'Wybierz opcje'}
                         buttonStyle={{ width: '100%', justifyContent: 'flex-end', borderWidth: 2, borderRadius: 5, paddingVertical: 10, paddingHorizontal: 10 }}
                         dropdownStyle={{ backgroundColor: '#fff', paddingHorizontal: 10, borderRadius: 5, paddingBottom: 10 }}
                         rowStyle={{ paddingVertical: 10, borderBottomWidth: 2 }}
+                        editable={!isLoading}
+                        value={restaurantId}
                         onSelect={(selectedItem, index) => {
-                            console.log(selectedItem, index)
+                            onChangeRestaurantIdHandler(selectedItem.restaurantId)
                         }}
                         buttonTextAfterSelection={(selectedItem, index) => {
-                            return selectedItem
+                            return selectedItem.name
                         }}
                         rowTextForSelection={(item, index) => {
-                            return item
+                            return item.name
                         }}
                     />
                 </View>
+                {/* {inputList.length > 0
+                    ? inputList.map((input, index) => (
+                        <View key={index} style={styles.inputContainer}>
+                            <Text style={styles.label}>{index + 1}. Wprowadź zamówienie</Text>
+                            <View style={styles.addInputContainer}>
+                                <Controller
+                                    control={control}
+                                    rules={{
+                                        required: true,
+                                    }}
+                                    render={({ field: {  onBlur, onChange } }) => (
+                                        <TextInput
+                                            onBlur={onBlur}
+                                            onChangeText={(event) => handleInputChange(event, index)}
+                                            value={input}
+                                            placeholderTextColor={'#000000'}
+                                            style={[styles.textInput, styles.addInput]}
+                                            editable={!isLoading}
+                                            placeholder={'Wprowadź zamówienie'} />
+                                    )}
+                                    name={`content${index + 1}`}
+                                />
+                                <TouchableOpacity style={styles.removeButtonContainer} onPress={() => handleRemoveItem(index)}>
+                                    <FontAwesome style={styles.removeButtonText} name="remove" size={15} color="black" />
+                                </TouchableOpacity>
+                            </View>
+                        </View>
+                    ))
+                    : " "} */}
                 <View style={styles.inputContainer}>
                     <Text style={styles.label}>Wprowadź zamówienie</Text>
                     <Controller
@@ -46,36 +171,31 @@ const Form = (props) => {
                         rules={{
                             required: true,
                         }}
-                        render={({ field: { onChange, onBlur, value } }) => (
-                            <TextInput textAlignVertical={'top'} onBlur={onBlur} onChangeText={onChange} value={value} multiline={true} numberOfLines={10} placeholderTextColor={'#000000'} style={[styles.textInput, { maxHeight: 190 }]} placeholder={'Wprowadź zamówienie'} />
+                        render={({ field: { value, onBlur, onChange } }) => (
+                            <TextInput
+                                textAlignVertical={'top'}
+                                onBlur={onBlur}
+                                onChangeText={onChangeContentHandler}
+                                value={content}
+                                multiline={true}
+                                numberOfLines={10}
+                                placeholderTextColor={'#000000'}
+                                style={[styles.textInput, styles.textArea]}
+                                editable={!isLoading}
+                                placeholder={'Wprowadź zamówienie'} />
                         )}
-                        name="order"
+                        name="content"
                     />
-                    {errors.order && <Text style={styles.errors}>Wpisano błędnie imie.</Text>}
                 </View>
+
+                {/* <TouchableOpacity style={[styles.button, { marginBottom: 20 }]} onPress={handleListAdd}>
+                    <Text style={styles.buttonText}>Dodaj kolejne danie +</Text>
+                </TouchableOpacity> */}
                 <View style={styles.inputContainer}>
-                    <TouchableOpacity style={styles.button} >
-                        <Text onPress={handleSubmit(onSubmit)} style={styles.buttonText}>Złóż zamówienie</Text>
+                    <TouchableOpacity style={styles.button} disabled={isLoading} onPress={onSubmitFormHandler}>
+                        <Text style={styles.buttonText}>Złóż zamówienie</Text>
                     </TouchableOpacity>
                 </View>
-                <Modal
-                    animationType="fade"
-                    transparent={true}
-                    visible={modalVisible}
-                    onRequestClose={() => {
-                        setModalVisible(!modalVisible);
-                    }}
-                >
-                    <View style={styles.popup}>
-                        <View style={styles.popupContainer}>
-                            <Text style={styles.popupText}>Twoje zamówienie zostało złożone i zostanie dostarczone około godziny 13:00</Text>
-                            <View style={styles.popupButtonContainer}>
-                                <Text style={[styles.popupCloseButton, styles.popupButton]} onPress={() => setModalVisible(!modalVisible)}>Zakończ</Text>
-                                <Text style={[styles.popupToUserButton, styles.popupButton]} >Historia zamówień</Text>
-                            </View>
-                        </View>
-                    </View>
-                </Modal>
             </View>
         </GenericScreen>
     )
@@ -83,12 +203,19 @@ const Form = (props) => {
 
 const styles = StyleSheet.create({
     formContainer: {
-        paddingTop: 40,
+        paddingTop: 20,
+    },
+    textArea: {
+        ...Platform.select({
+            ios: {
+                minHeight: 190,
+                paddingTop: 10,
+                fontSize: 16,
+            }
+        })
     },
     label: {
-        position: 'absolute',
-        top: -27,
-        left: 0,
+        marginBottom: 5,
         fontSize: 16,
         fontWeight: "600",
     },
@@ -114,52 +241,26 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         backgroundColor: '#086ad8',
     },
-    popup: {
-        position: 'relative',
-        backgroundColor: 'rgba(0,0,0,0.5)',
-        width: '100%',
-        height: '100vh',
+    selectList: {
+        marginBottom: 20,
+    },
+    removeButtonContainer: {
         justifyContent: 'center',
         alignItems: 'center',
-        paddingHorizontal: 25,
+        borderWidth: 2,
+        borderRadius: 25,
+        height: 40,
+        width: 40,
+        marginLeft: 10,
     },
-    popupContainer: {
-        borderRadius: 5,
-        backgroundColor: '#ffffff',
-        borderColor: '#086ad8',
-        borderWidth: 3,
-        paddingHorizontal: 30,
-        paddingVertical: 35,
-    },
-    popupText: {
-        fontSize: 16,
-        fontWeight: '500',
-        textAlign: 'center',
-        paddingBottom: 20,
-    },
-    popupButtonContainer: {
+    addInputContainer: {
         flexDirection: 'row',
         justifyContent: 'space-between',
-        width: '100%',
+        alignItems: 'center',
     },
-    popupButton: {
-        borderRadius: 5,
-        paddingHorizontal: 20,
-        paddingVertical: 10,
-        fontWeight: '500',
-    },
-    popupCloseButton: {
-        backgroundColor: '#086ad8',
-        color: '#ffffff',
-    },
-    popupToUserButton: {
-        borderWidth: 2,
-        color: '#086ad8',
-        borderColor: '#086ad8',
-    },
-    selectList: {
-        marginBottom: 40,
-    },
+    addInput: {
+        width: '85%',
+    }
 });
 
 export default Form;

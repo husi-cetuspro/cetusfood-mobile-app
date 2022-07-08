@@ -12,25 +12,42 @@ import Form from './components/features/forms/Form';
 import User from './components/features/user/User';
 import HistoryOrder from './components/features/historyOrder/HistoryOrder';
 import SingleOrder from './components/features/historyOrder/detailsOrder/SingleOrder';
+import { AuthProvider } from './providers/AuthContextProvider';
+import { useAuthContext } from './providers/AuthContextProvider';
 
-const Stack = createNativeStackNavigator();
+const AppStack = createNativeStackNavigator();
+const AuthStack = createNativeStackNavigator();
+const AppNavigator = () => <AppStack.Navigator initialRouteName="Form" screenOptions={{ headerShown: false }}>
+  <AppStack.Screen name="Form" component={Form} />
+  <AppStack.Screen name="User" component={User} />
+  <AppStack.Screen name="RestaurantSuggestion" component={RestaurantSuggestion} />
+  <AppStack.Screen name="HistoryOrder" component={HistoryOrder} />
+  <AppStack.Screen name="SingleOrder" component={SingleOrder} />
+</AppStack.Navigator>
+
+const AuthNavigator = () => <AuthStack.Navigator initialRouteName="Login" screenOptions={{ headerShown: false }}>
+  <AuthStack.Screen name="Login" component={Login} />
+  <AuthStack.Screen name="ForgetPassword" component={ForgetPassword} />
+  <AuthStack.Screen name="Register" component={Register} />
+  <AuthStack.Screen name="NewPassword" component={NewPassword} />
+</AuthStack.Navigator>
+
+const AuthControll = () => {
+  const { token } = useAuthContext();
+  return (
+    token ? <AppNavigator /> : <AuthNavigator />
+
+  )
+}
 
 export default function App() {
   return (
     <View style={styles.container}>
-      <NavigationContainer>
-        <Stack.Navigator initialRouteName="Login" screenOptions={{headerShown: false}}>
-          <Stack.Screen name="Login" component={Login} />
-          <Stack.Screen name="ForgetPassword" component={ForgetPassword} />
-          <Stack.Screen name="Register" component={Register} />
-          <Stack.Screen name="NewPassword" component={NewPassword} />
-          <Stack.Screen name="Form" component={Form} />
-          <Stack.Screen name="User" component={User} />
-          <Stack.Screen name="RestaurantSuggestion" component={RestaurantSuggestion} />
-          <Stack.Screen name="HistoryOrder" component={HistoryOrder} />
-          <Stack.Screen name="SingleOrder" component={SingleOrder} />
-        </Stack.Navigator>
-      </NavigationContainer>
+      <AuthProvider>
+        <NavigationContainer>
+          <AuthControll />
+        </NavigationContainer>
+      </AuthProvider>
     </View>
   );
 }

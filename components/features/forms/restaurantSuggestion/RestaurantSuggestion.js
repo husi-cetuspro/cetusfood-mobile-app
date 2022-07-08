@@ -1,19 +1,60 @@
-import React, {useState } from 'react';
+import React, { useState } from 'react';
 import { StyleSheet, View, Text, TextInput, TouchableOpacity, Keyboard } from 'react-native';
 import GenericScreen from "../../../common/GenericScreen"
 import { useForm, Controller } from "react-hook-form";
+import axios from "axios";
+
+const baseUrl = "https://api.foodapp.academy.st.cetuspro.com/restaurants";
 
 const RestaurantSuggestion = () => {
-    const [inputOpen, setInputOpen] = useState(false);
+    const [inputOpen, setInputOpen] = useState("");
+    const [name, setName] = useState("");
+    const [email, setEmail] = useState("");
+    const [url, setUrl] = useState("");
+    const [isLoading, setIsLoading] = useState(false);
     const { control, handleSubmit, formState: { errors } } = useForm({
         defaultValues: {
-            nameRestaurant: '',
-            linkRestaurant: '',
-            emailRestaurant: ''
+            name: '',
+            url: '',
+            email: ''
         }
     });
-    const onSubmit = data => {
-        console.log(data)
+    const onChangeNameHandler = (name) => {
+        setName(name);
+    };
+    const onChangeEmailHandler = (email) => {
+        setEmail(email);
+    };
+    const onChangeUrlHandler = (url) => {
+        setUrl(url);
+    };
+
+
+    const onSubmitFormHandler = async (event) => {
+        if (!name.trim() || !email.trim() || !url.trim()) {
+            alert("Name or Email is invalid");
+            return;
+        }
+        setIsLoading(true);
+        try {
+            const response = await axios.post(`${baseUrl}`, {
+                name,
+                email,
+                url,
+            });
+            if (response.status === 201) {
+                alert(` You have created: ${JSON.stringify(response.data)}`);
+                setIsLoading(false);
+                setName('');
+                setEmail('');
+                setUrl('');
+            } else {
+                throw new Error("An error has occurred");
+            }
+        } catch (error) {
+            alert("An error has occurred");
+            setIsLoading(false);
+        }
     };
     return (
         <GenericScreen inputOpen={inputOpen}>
@@ -25,21 +66,21 @@ const RestaurantSuggestion = () => {
                         rules={{
                             required: true,
                         }}
-                        render={({ field: { onChange, onBlur, value } }) => (
+                        render={({ field: { onBlur } }) => (
                             <TextInput
                                 style={styles.textInput}
                                 onBlur={onBlur}
-                                onChangeText={onChange}
-                                value={value}
+                                onChangeText={onChangeNameHandler}
+                                value={name}
                                 placeholder={'Wpisz nazwe restauracji'}
                                 placeholderTextColor={'#000000'}
-                                onFocus={() => setInputOpen(true)}
-                                onEndEditing={() => setInputOpen(false)}
+                                // onFocus={() => setInputOpen(true)}
+                                // onEndEditing={() => setInputOpen(false)}
+                                editable={!isLoading}
                             />
                         )}
                         name="nameRestaurant"
                     />
-                    {errors.nameRestaurant && <Text style={styles.errors}>Wypełnij to pole.</Text>}
                 </View>
                 <View style={styles.inputContainer}>
                     <Text style={styles.label}>Link do strony internetowej restauracji</Text>
@@ -48,21 +89,21 @@ const RestaurantSuggestion = () => {
                         rules={{
                             required: true,
                         }}
-                        render={({ field: { onChange, onBlur, value } }) => (
+                        render={({ field: { onBlur } }) => (
                             <TextInput
                                 style={styles.textInput}
                                 onBlur={onBlur}
-                                onChangeText={onChange}
-                                value={value}
+                                onChangeText={onChangeUrlHandler}
+                                value={url}
                                 placeholder={'Wpisz link do strony internetowej'}
                                 placeholderTextColor={'#000000'}
-                                onFocus={() => setInputOpen(true)}
-                                onEndEditing={() => setInputOpen(false)}
+                                // onFocus={() => setInputOpen(true)}
+                                // onEndEditing={() => setInputOpen(false)}
+                                editable={!isLoading}
                             />
                         )}
                         name="linkRestaurant"
                     />
-                    {errors.linkRestaurant && <Text style={styles.errors}>Wypełnij to pole.</Text>}
                 </View>
                 <View style={styles.inputContainer}>
                     <Text style={styles.label}>Adres e-mail do przyjmowania zamówień</Text>
@@ -75,20 +116,19 @@ const RestaurantSuggestion = () => {
                             <TextInput
                                 style={styles.textInput}
                                 onBlur={onBlur}
-                                onChangeText={onChange}
-                                value={value}
+                                onChangeText={onChangeEmailHandler}
+                                value={email}
                                 placeholder={'Wpisz adres e-mail'}
                                 placeholderTextColor={'#000000'}
-                                onFocus={() => setInputOpen(true)}
-                                onEndEditing={() => setInputOpen(false)}
+                                // onFocus={() => setInputOpen(true)}
+                                // onEndEditing={() => setInputOpen(false)}
                             />
                         )}
                         name="emailRestaurant"
                     />
-                    {errors.emailRestaurant && <Text style={styles.errors}>Wypełnij to pole.</Text>}
                 </View>
-                <TouchableOpacity style={styles.button} >
-                    <Text style={styles.buttonText} onPress={handleSubmit(onSubmit)}>Dodaj sugestię</Text>
+                <TouchableOpacity style={styles.button} disabled={isLoading} onPress={onSubmitFormHandler} >
+                    <Text style={styles.buttonText}>Dodaj sugestię</Text>
                 </TouchableOpacity>
             </View>
         </GenericScreen>
@@ -116,6 +156,12 @@ const styles = StyleSheet.create({
         paddingVertical: 10,
         paddingHorizontal: 10,
         borderRadius: 5,
+        ...Platform.select({
+            ios:{
+                paddingVertical: 15,
+                fontSize: 16,
+            }
+        })
     },
     buttonText: {
         fontSize: 15,
