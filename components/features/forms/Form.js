@@ -6,7 +6,6 @@ import { useForm, Controller } from "react-hook-form";
 import { api } from '../../../api/Api';
 import { useAuthContext } from '../../../providers/AuthContextProvider';
 import Alert from '../../Alert';
-// import { FontAwesome } from '@expo/vector-icons';
 
 const Form = () => {
     const [restaurants, setRestaurants] = useState([]);
@@ -74,44 +73,6 @@ const Form = () => {
         setContent(content);
     };
 
-    // const [inputList, setInputList] = useState([
-    //     {
-    //         input: "",
-    //         input_rank: null
-    //     }
-    // ])
-
-    // const [isDisabled, setIsDisabled] = useState(false)
-
-    // useEffect(() => {
-    //     if (inputList.length > 0) {
-    //         inputList[inputList.length - 1].input === ""
-    //             ? setIsDisabled(true)
-    //             : setIsDisabled(false)
-    //     }
-    // })
-    // const handleListAdd = () => {
-    //     setInputList([
-    //         ...inputList,
-    //         {
-    //             input: "",
-    //             input_rank: null
-    //         }
-    //     ])
-    // }
-    // const handleInputChange = (event, index) => {
-    //     const { value } = event.target.value
-    //     const newInputList = [...inputList]
-    //     newInputList[index].input = value
-    //     newInputList[index].input_rank = index + 1
-    //     setInputList(newInputList)
-    // }
-    // const handleRemoveItem = (index) => {
-    //     const newList = [...inputList]
-    //     newList.splice(index, 1)
-    //     setInputList(newList)
-    // }
-
     return (
         <GenericScreen>
             <View style={styles.formContainer}>
@@ -136,35 +97,6 @@ const Form = () => {
                         }}
                     />
                 </View>
-                {/* {inputList.length > 0
-                    ? inputList.map((input, index) => (
-                        <View key={index} style={styles.inputContainer}>
-                            <Text style={styles.label}>{index + 1}. Wprowadź zamówienie</Text>
-                            <View style={styles.addInputContainer}>
-                                <Controller
-                                    control={control}
-                                    rules={{
-                                        required: true,
-                                    }}
-                                    render={({ field: {  onBlur, onChange } }) => (
-                                        <TextInput
-                                            onBlur={onBlur}
-                                            onChangeText={(event) => handleInputChange(event, index)}
-                                            value={input}
-                                            placeholderTextColor={'#000000'}
-                                            style={[styles.textInput, styles.addInput]}
-                                            editable={!isLoading}
-                                            placeholder={'Wprowadź zamówienie'} />
-                                    )}
-                                    name={`content${index + 1}`}
-                                />
-                                <TouchableOpacity style={styles.removeButtonContainer} onPress={() => handleRemoveItem(index)}>
-                                    <FontAwesome style={styles.removeButtonText} name="remove" size={15} color="black" />
-                                </TouchableOpacity>
-                            </View>
-                        </View>
-                    ))
-                    : " "} */}
                 <View style={styles.inputContainer}>
                     <Text style={styles.label}>Wprowadź zamówienie</Text>
                     <Controller
@@ -188,10 +120,6 @@ const Form = () => {
                         name="content"
                     />
                 </View>
-
-                {/* <TouchableOpacity style={[styles.button, { marginBottom: 20 }]} onPress={handleListAdd}>
-                    <Text style={styles.buttonText}>Dodaj kolejne danie +</Text>
-                </TouchableOpacity> */}
                 <View style={styles.inputContainer}>
                     <TouchableOpacity style={styles.button} disabled={isLoading} onPress={handleSubmit(onSubmitFormHandler)}>
                         <Text style={styles.buttonText}>Złóż zamówienie</Text>
