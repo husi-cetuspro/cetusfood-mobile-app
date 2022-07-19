@@ -9,6 +9,7 @@ const HistoryOrder = () => {
     const axios = require('axios');
     const [orderNumber, setOrderNumber] = useState([]);
     const [data, setData] = useState([])
+
     useEffect(() => {
         async function doGetRequest() {
             let res = await api.get('/orders');

@@ -1,12 +1,14 @@
-import React from 'react';
-import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
+import React, { useState } from 'react';
+import { StyleSheet, View, Text, TouchableOpacity, Modal } from 'react-native';
 import GenericScreen from '../../common/GenericScreen';
 import { useNavigation } from '@react-navigation/native';
 import { useAuthContext } from '../../../providers/AuthContextProvider';
 
 const User = () => {
     const navigation = useNavigation();
-    const {setToken} = useAuthContext();
+    const { setToken } = useAuthContext();
+
+
     return (
         <GenericScreen>
             <View style={styles.userContainer}>
@@ -40,16 +42,44 @@ const styles = StyleSheet.create({
         fontWeight: '500',
         color: '#444',
         paddingLeft: 10,
-        
+
     },
-    textContainer:{
+    textContainer: {
         ...Platform.select({
-            ios:{
+            ios: {
                 borderBottomWidth: 2.5,
                 borderColor: '#086ad8',
             }
         })
-    }
+    },
+    alertContainer: {
+        flex: 1,
+        alignItems: "center",
+        justifyContent: "center",
+        backgroundColor: "rgba(0,0,0, 0.5)",
+    },
+    alertTextContainer: {
+        width: "75%",
+        height: 200,
+        backgroundColor: "#ffffff",
+        alignItems: "center",
+        borderRadius: 5,
+        paddingVertical: 50,
+    },
+    alertButtonText: {
+        textTransform: "none",
+        fontSize: 15,
+        paddingVertical: 10,
+        textAlign: 'center',
+        color: '#ffffff',
+        fontWeight: "500",
+    },
+    alertButtonContainer: {
+        borderRadius: 5,
+        backgroundColor: '#086ad8',
+        paddingHorizontal: 30,
+        marginTop: 20,
+    },
 });
 
 export default User;

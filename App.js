@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { StyleSheet, View } from 'react-native';
 import Login from './components/features/forms/login/Login';
 import RestaurantSuggestion from './components/features/forms/restaurantSuggestion/RestaurantSuggestion';

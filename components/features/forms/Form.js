@@ -5,10 +5,12 @@ import GenericScreen from '../../common/GenericScreen';
 import { useForm, Controller } from "react-hook-form";
 import { api } from '../../../api/Api';
 import { useAuthContext } from '../../../providers/AuthContextProvider';
-import { FontAwesome } from '@expo/vector-icons';
+import Alert from '../../Alert';
+// import { FontAwesome } from '@expo/vector-icons';
 
 const Form = () => {
     const [restaurants, setRestaurants] = useState([]);
+    const [modalVisible, setModalVisible] = useState(false);
     const { control, handleSubmit, formState: { errors } } = useForm({
         defaultValues: {
             id: '',
@@ -16,21 +18,27 @@ const Form = () => {
             content: ''
         }
     });
+    const {token} = useAuthContext();
     useEffect(() => {
         async function doGetRequest() {
-            let res = await api.get(`/restaurants`);
+            try {
+            api.defaults.headers["Authorization"] = `Bearer ${token}`
+            let res = await api.get(`/user/restaurants`);
             let data = res.data;
             let rest = [];
             data.forEach(element => {
                 rest.push({ restaurantId: element.id, name: element.name })
             });
             setRestaurants(rest);
+        } catch (error) {
+            console.log(JSON.stringify(error))
+        }
         }
         doGetRequest();
     }, []);
 
     const [restaurantId, setRestaurantId] = useState([]);
-    const [content, setContent] = useState([]);
+    const [content, setContent] = useState("");
     const [isLoading, setIsLoading] = useState(false);
 
     const onSubmitFormHandler = async (event) => {
@@ -40,12 +48,12 @@ const Form = () => {
         }
         setIsLoading(true);
         try {
-            const response = await api.post(`/orders`, {
+            const response = await api.post(`/user/orders`, {
                 restaurantId,
                 content,
             });
-            if (response.status === 201) {
-                alert(` Stworzono zamówienie o numerze: ${JSON.stringify(response.data)}`);
+            if (response.status === 200) {
+                setModalVisible(true);
                 setIsLoading(false);
                 setRestaurantId('');
                 setContent('');
@@ -62,9 +70,9 @@ const Form = () => {
     };
     
 
-
-
-
+    const onChangeContentHandler = (content) => {
+        setContent(content);
+    };
 
     // const [inputList, setInputList] = useState([
     //     {
@@ -82,7 +90,6 @@ const Form = () => {
     //             : setIsDisabled(false)
     //     }
     // })
-
     // const handleListAdd = () => {
     //     setInputList([
     //         ...inputList,
@@ -99,17 +106,11 @@ const Form = () => {
     //     newInputList[index].input_rank = index + 1
     //     setInputList(newInputList)
     // }
-
     // const handleRemoveItem = (index) => {
     //     const newList = [...inputList]
     //     newList.splice(index, 1)
     //     setInputList(newList)
     // }
-
-    const onChangeContentHandler = (content) => {
-        setContent(content);
-    };
-
 
     return (
         <GenericScreen>
@@ -171,7 +172,7 @@ const Form = () => {
                         rules={{
                             required: true,
                         }}
-                        render={({ field: { value, onBlur, onChange } }) => (
+                        render={({ field: { onBlur, value} }) => (
                             <TextInput
                                 textAlignVertical={'top'}
                                 onBlur={onBlur}
@@ -192,11 +193,17 @@ const Form = () => {
                     <Text style={styles.buttonText}>Dodaj kolejne danie +</Text>
                 </TouchableOpacity> */}
                 <View style={styles.inputContainer}>
-                    <TouchableOpacity style={styles.button} disabled={isLoading} onPress={onSubmitFormHandler}>
+                    <TouchableOpacity style={styles.button} disabled={isLoading} onPress={handleSubmit(onSubmitFormHandler)}>
                         <Text style={styles.buttonText}>Złóż zamówienie</Text>
                     </TouchableOpacity>
                 </View>
             </View>
+            <Alert
+                modalVisible={modalVisible}
+                closeAlert={() => setModalVisible(!modalVisible)}
+                text={'Zamówienie zostało złożone.'}
+                closeButton={'Zamknij'}
+            />
         </GenericScreen>
     )
 }

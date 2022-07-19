@@ -3,11 +3,13 @@ import { StyleSheet, View, Text, TextInput, TouchableOpacity, Keyboard } from 'r
 import GenericScreen from "../../../common/GenericScreen"
 import { useForm, Controller } from "react-hook-form";
 import axios from "axios";
+import { api } from '../../../../api/Api';
+import Alert from '../../../Alert';
 
-const baseUrl = "https://api.foodapp.academy.st.cetuspro.com/restaurants";
 
 const RestaurantSuggestion = () => {
     const [inputOpen, setInputOpen] = useState("");
+    const [modalVisible, setModalVisible] = useState(false);
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [url, setUrl] = useState("");
@@ -32,18 +34,19 @@ const RestaurantSuggestion = () => {
 
     const onSubmitFormHandler = async (event) => {
         if (!name.trim() || !email.trim() || !url.trim()) {
-            alert("Name or Email is invalid");
+            alert("Uzupełnij pola");
             return;
         }
         setIsLoading(true);
         try {
-            const response = await axios.post(`${baseUrl}`, {
+            const response = await api.post(`/restaurants`, {
                 name,
                 email,
                 url,
             });
             if (response.status === 201) {
-                alert(` You have created: ${JSON.stringify(response.data)}`);
+                // alert(` You have created: ${JSON.stringify(response.data)}`);
+                setModalVisible(true);
                 setIsLoading(false);
                 setName('');
                 setEmail('');
@@ -131,6 +134,12 @@ const RestaurantSuggestion = () => {
                     <Text style={styles.buttonText}>Dodaj sugestię</Text>
                 </TouchableOpacity>
             </View>
+            <Alert
+                modalVisible={modalVisible}
+                closeAlert={() => setModalVisible(!modalVisible)}
+                text={'Dodano propozycje restauracji.'}
+                closeButton={'Zamknij'}
+            />
         </GenericScreen>
     )
 }

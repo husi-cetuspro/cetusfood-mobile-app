@@ -13,39 +13,33 @@ const Register = () => {
         defaultValues: {
             email: '',
             password: '',
-            confirmPassword: '',
+            confirmationPassword: '',
         }
     });
 
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const [confirmPassword, setConfirmPassword] = useState("");
-    const [isRODOAllowed, setIsRODOAllowed] = useState(false);
-    const [isMailingAllowed, setIsMailingAllowed] = useState(true);
+    const [confirmationPassword, setConfirmationPassword] = useState("");
     const [isLoading, setIsLoading] = useState(false);
 
     const onSubmitFormHandler = async (event) => {
-        if (!email.trim() || !password.trim() || !confirmPassword.trim()) {
+        if (!email.trim() || !password.trim() || !confirmationPassword.trim()) {
             alert("Name or Email is invalid");
             return;
         }
         setIsLoading(true);
         try {
-            const response = await api.post(`https://api.mobicarclub.st.cetuspro.com/v1/auth/register-user`, {
+            const response = await api.post(`/public/account/register`, {
                 email,
                 password,
-                confirmPassword,
-                isRODOAllowed,
-                isMailingAllowed: true,
+                confirmationPassword,
             });
             if (response.status === 201) {
                 alert(` You have created: ${JSON.stringify(response.data)}`);
                 setIsLoading(false);
                 setEmail('');
                 setPassword('');
-                setConfirmPassword('');
-                setIsRODOAllowed(false);
-                setIsMailingAllowed(true);
+                setConfirmationPassword('');
                 navigation.navigate('Login');
             } else {
                 throw new Error("Wystąpił błąd");
@@ -61,8 +55,8 @@ const Register = () => {
     const onChangePasswordHandler = (password) => {
         setPassword(password);
     };
-    const onChangeConfirmPasswordHandler = (confirmPassword) => {
-        setConfirmPassword(confirmPassword);
+    const onChangeconfirmationPasswordHandler = (confirmationPassword) => {
+        setConfirmationPassword(confirmationPassword);
     };
     return (
         <LoginScreen>
@@ -121,29 +115,16 @@ const Register = () => {
                             <TextInput
                                 style={styles.textInput}
                                 onBlur={onBlur}
-                                onChangeText={onChangeConfirmPasswordHandler}
+                                onChangeText={onChangeconfirmationPasswordHandler}
                                 editable={!isLoading}
-                                value={confirmPassword}
+                                value={confirmationPassword}
                                 placeholder={'Wpisz hasło'}
                                 placeholderTextColor={'#000000'}
                                 secureTextEntry={true}
                             />
                         )}
-                        name="confirmPassword"
+                        name="confirmationPassword"
                     />
-                </View>
-                <View style={styles.checkboxContainer}>
-                    <View style={styles.singleChecboxContainer}>
-                        <Checkbox
-                            status={isRODOAllowed ? 'checked' : 'unchecked'}
-                            onPress={() => {
-                                setIsRODOAllowed(!isRODOAllowed);
-                            }}
-                            color={'#086ad8'}
-                            uncheckColor={'red'}
-                        />
-                        <Text>isRODOAllowed</Text>
-                    </View>
                 </View>
                 <TouchableOpacity style={styles.button} disabled={isLoading} onPress={onSubmitFormHandler}>
                     <Text style={styles.buttonText}>Zarejestruj się</Text>
@@ -193,13 +174,6 @@ const styles = StyleSheet.create({
     button: {
         borderRadius: 5,
         backgroundColor: '#086ad8',
-    },
-    checkboxContainer:{
-        paddingBottom: 20,
-    },
-    singleChecboxContainer:{
-        flexDirection: 'row',
-        alignItems: 'center',
     },
 });
 
